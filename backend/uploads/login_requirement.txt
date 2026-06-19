@@ -1,0 +1,49 @@
+Feature: User Login
+
+Description:
+The application should allow registered users to securely login into the system.
+
+Actors:
+1. Customer
+2. Admin
+
+Acceptance Criteria:
+
+1. A user should be able to login with a valid username and password.
+
+2. If the username is correct but password is incorrect, the system should display an error message:
+"Invalid username or password"
+
+3. If a user enters empty username or password fields, the system should show validation messages.
+
+4. A locked user account should not be allowed to login.
+
+5. After successful login, the user should be redirected to the dashboard page.
+
+6. The user should be able to logout successfully.
+
+Business Rules:
+
+1. Password is mandatory.
+
+2. Username should be registered in the system.
+
+3. After 5 failed login attempts, the account should be temporarily locked.
+
+4. Session should expire after 30 minutes of inactivity.
+
+Edge Cases:
+
+1. Username with maximum allowed length.
+
+2. Password containing special characters.
+
+3. Login attempt with spaces before or after username.
+
+4. Multiple login attempts from different browsers.
+
+5. User tries to access dashboard URL directly without authentication.
+
+Expected Test Coverage:
+
+Generate positive, negative, security, and edge case scenarios.
