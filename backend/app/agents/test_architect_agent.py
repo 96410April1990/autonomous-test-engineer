@@ -53,8 +53,12 @@ class TestArchitectAgent:
 
         clean = self.extract_json(response)
 
-        data = json.loads(clean)
-
+        try:
+            data = json.loads(clean)
+        except json.JSONDecodeError:
+            clean = clean.replace("\\", "\\\\")
+            data = json.loads(clean)
+            
         return TestSuite(**data)
     
     def extract_json(self, text: str):
