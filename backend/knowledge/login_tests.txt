@@ -1,0 +1,6 @@
+Existing login test scenarios:
+
+1. Valid username and password should login.
+2. Invalid password should show error.
+3. Locked users cannot login.
+4. Multiple failed attempts lock account.

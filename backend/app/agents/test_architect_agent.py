@@ -3,13 +3,16 @@ import os
 import re
 from app.services.llm_service import LLMService
 from app.models.test_suite import ( TestSuite )
+from app.rag.rag_service import RAGService
 
 class TestArchitectAgent:
 
     def __init__(self):
         self.llm = LLMService()
+        self.rag = RAGService()
 
     def generate_tests(self, requirement_json: str):
+        context = self.rag.retrieve(requirement_json)
         prompt = f"""
         You are a Senior QA Architect.
 
@@ -42,6 +45,10 @@ class TestArchitectAgent:
                 ]
             ]
         }}
+
+        Existing knowledge:
+
+        {context}
 
         Requirement:
 
