@@ -1,4 +1,5 @@
 import os
+from app.vector.vector_store import ( VectorStore )
 
 class RAGService:
     def __init__(self):

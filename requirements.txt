@@ -21,3 +21,4 @@ pypdf
 python-docx
 
 requests
+sentence-transformers
