@@ -4,17 +4,24 @@ import re
 from app.services.llm_service import LLMService
 from app.models.test_suite import ( TestSuite )
 from app.rag.rag_service import RAGService
+from app.guardrails.qa_guardrails import ( QAGuardrail )
 
 class TestArchitectAgent:
 
     def __init__(self):
         self.llm = LLMService()
+        self.guardrail = QAGuardrail()
         self.rag = RAGService()
 
     def generate_tests(self, requirement_json: str):
+        if not self.guardrail.validate_input(requirement_json):
+            print("======== GUARDRAIL RESULT ========")
+            print(requirement_json)
+            print("==================================")
+            raise Exception("Requirement Rejected")
         context = self.rag.retrieve(requirement_json)
         prompt = f"""
-        You are a Senior QA Architect.
+        You are an AI QA Engineer.
 
         Generate exhaustive test cases.
 
@@ -26,6 +33,9 @@ class TestArchitectAgent:
         4. Boundary cases
 
         Return ONLY JSON.
+
+        The root key must be:
+        test_cases
 
         Format:
 
@@ -46,7 +56,7 @@ class TestArchitectAgent:
             ]
         }}
 
-        Existing knowledge:
+        Use this existing knowledge:
 
         {context}
 
@@ -62,11 +72,29 @@ class TestArchitectAgent:
 
         try:
             data = json.loads(clean)
+            if "test_cases" not in data:
+                raise Exception(
+                    f"Invalid Test Architect response: {data}"
+                )
         except json.JSONDecodeError:
-            clean = clean.replace("\\", "\\\\")
+            #clean = clean.replace("\\", "\\\\")
             data = json.loads(clean)
+            if "test_cases" not in data:
+                raise Exception(
+                    f"Invalid Test Architect response: {data}"
+                )
             
-        return TestSuite(**data)
+        print("======== TEST SUITE GENERATED ========")
+        print(json.dumps(data, indent=2))
+        print("======================================")
+        suite = TestSuite(**data)
+
+        print("======== TEST ARCHITECT RETURN ========")
+        print(type(suite))
+        print(suite)
+        print("========================================")
+
+        return suite
     
     def extract_json(self, text: str):
         match = re.search(r"\{.*\}", text, re.DOTALL)

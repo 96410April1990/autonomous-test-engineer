@@ -7,6 +7,8 @@ class BatchPlayWrightGenerator:
         self.llm = LLMService()
 
     def generate(self, test_cases:list):
+        if not test_cases:
+            raise Exception("No test cases received from Test Architect Agent")
         prompt = f"""
         You are an expert Playwright Python Automation Engineer.
 
@@ -36,7 +38,7 @@ class BatchPlayWrightGenerator:
 
         {json.dumps(
             [
-                test.model_dump()
+                test
                 for test in test_cases
             ],
             indent=2

@@ -13,7 +13,10 @@ class ProductionQAOrchestrator:
     def run(self, requirement:str):
         analysis = (self.requirement_agent.analyze(requirement))
         tests = (self.test_agent.generate_tests(analysis.json()))
-        generated = (self.generator.generate(tests.test_cases))
+        test_cases = tests.test_cases
+        # if not test_cases:
+        #     raise Exception(f"Invalid Test Architect response: {tests}")
+        generated = (self.generator.generate(test_cases))
         saved_files = (self.artifacts.save_files(generated["files"]))
 
         return { "feature": analysis.feature_name, "files_created": saved_files }

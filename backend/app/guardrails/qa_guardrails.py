@@ -1,16 +1,20 @@
 class QAGuardrail:
 
     def validate_input(self, requirement):
-        blocked_words = [
-            "password",
-            "secret",
-            "api key",
-            "delete database",
-            "production database"
+        dangerous_patterns = [
+            "ignore previous instructions",
+            "reveal system prompt",
+            "show api key",
+            "give me secret",
+            "delete production database",
+            "drop database",
+            "bypass security"
         ]
 
-        for word in blocked_words:
-            if word.lower() in requirement.lower():
+        requirement = requirement.lower()
+
+        for word in dangerous_patterns:
+            if word in requirement:
                 return False
             
         return True
